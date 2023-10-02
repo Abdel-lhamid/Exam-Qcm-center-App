@@ -1,6 +1,7 @@
 package ma.ensaf.Qcmexamcenterbackend.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,12 +13,13 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "exams", schema = "qcm_exam_db")
 public class ExamEntity implements Serializable {
     private static final long serialVersionUID = 6407689839461559517L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue
     private Long id;
     @Column(name = "exam_id", unique = true, nullable = false)
     private String examId;

@@ -75,6 +75,13 @@ public class ExamRecordServiceImpl implements ExamRecordService{
     }
 
     @Override
+    public List<ExamRecordDto> getAllExamRecordsForExam(String examId) {
+        ExamEntity exam = examRepository.findByExamId(examId);
+        List<ExamRecordEntity> examRecords = examRecordRepository.findByExam(exam);
+        return examRecords.stream().map(record -> modelMapper.map(record, ExamRecordDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public ExamRecordDto getExamRecordById(String examRecordId) {
         ExamRecordEntity examRecordEntity = examRecordRepository.findByExamRecordId(examRecordId);
         return modelMapper.map(examRecordEntity, ExamRecordDto.class);
@@ -89,6 +96,13 @@ public class ExamRecordServiceImpl implements ExamRecordService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<ExamRecordDto> getRecordsForStudent(String userId) {
+        UserEntity student = userRepository.findByUserId(userId);
+        List<ExamRecordEntity> examRecords = examRecordRepository.findByStudent(student);
+        return examRecords.stream().map(record -> modelMapper.map(record, ExamRecordDto.class)).collect(Collectors.toList());
     }
 
 

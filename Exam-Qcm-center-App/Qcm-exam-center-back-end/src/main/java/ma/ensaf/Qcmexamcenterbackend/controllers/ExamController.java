@@ -2,7 +2,6 @@ package ma.ensaf.Qcmexamcenterbackend.controllers;
 
 
 import ma.ensaf.Qcmexamcenterbackend.dtos.ExamDto;
-import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.services.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,6 +52,7 @@ public class ExamController {
         List<ExamDto> examsDto = examService.getExamsByProfessor(professorId);
         return ResponseEntity.ok(examsDto);
     }
+
 
 
 }
