@@ -2,6 +2,7 @@ package ma.ensaf.Qcmexamcenterbackend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
+import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
 import ma.ensaf.Qcmexamcenterbackend.response.UserResponse;
 
 import java.io.Serializable;
@@ -30,7 +31,7 @@ public class UserDto implements Serializable {
     private String verificationToken;
 
     @JsonView(value = {UserResponse.class})
-    private Enum UserRole;
+    private UserRole userRole;
 
     @JsonView(value = {UserResponse.class})
     private List<ExamDto> exams;

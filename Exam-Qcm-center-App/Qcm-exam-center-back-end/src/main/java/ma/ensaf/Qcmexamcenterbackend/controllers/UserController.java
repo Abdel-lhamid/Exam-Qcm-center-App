@@ -34,7 +34,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
         UserDto createdUser = userService.createUser(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
