@@ -3,6 +3,7 @@ package ma.ensaf.Qcmexamcenterbackend.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "exam_records")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExamRecordEntity implements Serializable {

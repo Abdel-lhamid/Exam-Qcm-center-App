@@ -2,6 +2,7 @@ package ma.ensaf.Qcmexamcenterbackend.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users", schema = "qcm_exam_db")
@@ -52,8 +54,7 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
-        return Collections.singletonList(authority);
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
     @Override
