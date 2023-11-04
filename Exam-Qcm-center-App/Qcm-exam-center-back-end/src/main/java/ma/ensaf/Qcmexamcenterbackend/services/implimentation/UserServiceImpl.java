@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
     @Override
-    public AuthenticationResponse authenticate(String email, String password) {
+    public AuthenticationResponse authenticate(String email, String password){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         email,
