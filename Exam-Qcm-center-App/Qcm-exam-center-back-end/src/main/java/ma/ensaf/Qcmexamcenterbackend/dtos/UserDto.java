@@ -31,7 +31,7 @@ public class UserDto implements Serializable {
     private String verificationToken;
 
     @JsonView(value = {UserResponse.class})
-    private UserRole userRole;
+        private UserRole userRole;
 
     @JsonView(value = {UserResponse.class})
     private List<ExamDto> exams;

@@ -1,14 +1,19 @@
 package ma.ensaf.Qcmexamcenterbackend.services.implimentation;
 
+import lombok.RequiredArgsConstructor;
+import ma.ensaf.Qcmexamcenterbackend.config.JwtService;
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
 import ma.ensaf.Qcmexamcenterbackend.repositories.UserRepository;
+import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
 import ma.ensaf.Qcmexamcenterbackend.shared.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -35,8 +41,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Utils util;
 
+    @Autowired
+    private JwtService jwtService;
+
+    private final AuthenticationManager authenticationManager;
+
+
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public AuthenticationResponse createUser(UserDto userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists with this email");
         }
@@ -49,7 +61,24 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserId(util.generateCustomId(32));
 
         UserEntity storedUser = userRepository.save(userEntity);
-        return modelMapper.map(storedUser, UserDto.class);
+        var jwtToken = jwtService.generateToken(storedUser);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .build();
+    }
+    @Override
+    public AuthenticationResponse authenticate(String email, String password) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        email,
+                        password
+                )
+        );
+        var user = userRepository.findByEmail(email);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .build();
     }
 
     @Override
@@ -112,4 +141,6 @@ public class UserServiceImpl implements UserService {
 
         return new User(user.getEmail(), user.getEncryptedPassword(), authorities);
     }
+
+
 }
