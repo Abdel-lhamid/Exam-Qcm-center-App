@@ -5,6 +5,7 @@ import ma.ensaf.Qcmexamcenterbackend.config.JwtService;
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
+import ma.ensaf.Qcmexamcenterbackend.exceptions.CustomAuthException;
 import ma.ensaf.Qcmexamcenterbackend.repositories.UserRepository;
 import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -47,9 +50,8 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
 
 
-    @Override
     public AuthenticationResponse createUser(UserDto userDto) {
-        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+        if (userRepository.findByEmail(userDto.getEmail()).orElse(null) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists with this email");
         }
         // Encrypt the password
@@ -67,28 +69,36 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
     @Override
-    public AuthenticationResponse authenticate(String email, String password){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        email,
-                        password
-                )
-        );
-        var user = userRepository.findByEmail(email);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .build();
-    }
+    public AuthenticationResponse authenticate(String email, String password) throws AuthenticationException {
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            email,
+                            password
+                    )
+            );
+            var user = userRepository.findByEmail(email).orElse(null);
+            var jwtToken = jwtService.generateToken(user);
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .build();
+        } catch (AuthenticationException e) {
+            // Handle authentication failure and return a custom message
+            throw new CustomAuthException("Authentication failed: Email or password is incorrect");
+        }
+
+        }
+
 
     @Override
-    public UserDto getUserByEmail(String email) {
-        UserEntity userEntity = userRepository.findByEmail(email);
+    public UserEntity getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email).orElse(null);
         if (userEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email " + email + " not found");
         }
 
-        return modelMapper.map(userEntity, UserDto.class);
+        return userEntity;
     }
 
     @Override
@@ -130,9 +140,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByEmail(email);
+        UserEntity user = userRepository.findByEmail(email).orElse(null);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }

@@ -1,41 +1,40 @@
 package ma.ensaf.Qcmexamcenterbackend.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
 import ma.ensaf.Qcmexamcenterbackend.response.UserResponse;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Data
 public class UserDto implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6407689839461559517L;
 
+    @JsonIgnore
     private Long id;
 
-    @JsonView(value = {UserResponse.class})
     private String userId;
 
-    @JsonView(value = {UserResponse.class})
     private String fullName;
 
-    @JsonView(value = {UserResponse.class})
     private String email;
 
-    @JsonView(value = {UserResponse.class})
     private String profileImageUrl;
 
+    @JsonIgnore
     private String password;
 
+    @JsonIgnore
     private String verificationToken;
 
-    @JsonView(value = {UserResponse.class})
-        private UserRole userRole;
+    private UserRole userRole;
 
-    @JsonView(value = {UserResponse.class})
     private List<ExamDto> exams;
-    @JsonView(value = {UserResponse.class})
     private List<ExamRecordDto> examsTaken;
 
 

@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +28,19 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserEntity userDetails){
         return generateToken(new HashMap<>(), userDetails);
     }
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails user
+            UserEntity user
     ){
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(user.getUsername())
+                .setSubject(user.getEmail())
+                .claim("userRole",user.getUserRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 48))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 48))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

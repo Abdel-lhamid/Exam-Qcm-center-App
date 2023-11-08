@@ -5,14 +5,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
-import ma.ensaf.Qcmexamcenterbackend.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,7 +23,8 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private UserService userService;
+
+    private final UserDetailsService userService;
     @Autowired
     private ModelMapper modelMapper;
     @Override
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         email = jwtService.extractEmail(jwt);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails user = this.modelMapper.map(userService.getUserByEmail(email), UserDetails.class);
+            UserDetails user = userService.loadUserByUsername(email);
             if (jwtService.isTokenValid(jwt, user)){
                 UsernamePasswordAuthenticationToken authToken =new UsernamePasswordAuthenticationToken(
                         user,null, user.getAuthorities());

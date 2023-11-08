@@ -4,6 +4,7 @@ import ma.ensaf.Qcmexamcenterbackend.dtos.AuthRequest;
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
+
+    @GetMapping("/test")
+    public String test(){
+        return "auth working, test success";
+    }
     @PostMapping("/signup")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody UserDto userDto
@@ -49,7 +57,7 @@ public class UserController {
 
     @GetMapping("/{email}")
     public ResponseEntity<UserDto> getUserById(@PathVariable String email) {
-        UserDto user = userService.getUserByEmail(email);
+        UserDto user = modelMapper.map(userService.getUserByEmail(email), UserDto.class);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
