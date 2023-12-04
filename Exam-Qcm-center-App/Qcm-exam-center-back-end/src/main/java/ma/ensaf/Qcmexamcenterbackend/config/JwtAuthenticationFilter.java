@@ -18,13 +18,24 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_EXPIRATION_TIME;
+import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_SECRET;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+
+    @Autowired
     private final JwtService jwtService;
 
+
+    @Autowired
     private final UserDetailsService userService;
+
+
+
+
     @Autowired
     private ModelMapper modelMapper;
     @Override

@@ -1,7 +1,7 @@
 package ma.ensaf.Qcmexamcenterbackend.enums;
 
 public enum UserRole {
-    STUDENT,
-    PROFESSOR,
-    ADMIN
+    ROLE_STUDENT,
+    ROLE_PROFESSOR,
+    ROLE_ADMIN
 }

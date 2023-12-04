@@ -44,51 +44,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Utils util;
 
-    @Autowired
-    private JwtService jwtService;
-
-    private final AuthenticationManager authenticationManager;
 
 
-    public AuthenticationResponse createUser(UserDto userDto) {
-        if (userRepository.findByEmail(userDto.getEmail()).orElse(null) != null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists with this email");
-        }
-        // Encrypt the password
-        String encryptedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
 
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        userEntity.setEncryptedPassword(encryptedPassword);
-        //set userId
-        userEntity.setUserId(util.generateCustomId(32));
-
-        UserEntity storedUser = userRepository.save(userEntity);
-        var jwtToken = jwtService.generateToken(storedUser);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .build();
-    }
-    @Override
-    public AuthenticationResponse authenticate(String email, String password) throws AuthenticationException {
-
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            email,
-                            password
-                    )
-            );
-            var user = userRepository.findByEmail(email).orElse(null);
-            var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponse.builder()
-                    .accessToken(jwtToken)
-                    .build();
-        } catch (AuthenticationException e) {
-            // Handle authentication failure and return a custom message
-            throw new CustomAuthException("Authentication failed: Email or password is incorrect");
-        }
-
-        }
 
 
     @Override
@@ -134,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllStudents() {
-        List<UserEntity> students = userRepository.findAllByUserRole(UserRole.STUDENT);
+        List<UserEntity> students = userRepository.findAllByUserRole(UserRole.ROLE_STUDENT);
         return students.stream()
                 .map(student -> modelMapper.map(student, UserDto.class))
                 .collect(Collectors.toList());

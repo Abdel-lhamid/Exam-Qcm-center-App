@@ -16,9 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_EXPIRATION_TIME;
+import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_SECRET;
+
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "+chG5lc4HkJ4OoldmfTqYbxCej7ytEB0V0J5rmlDXxG1FHuxEAD5Y80w9K/b+Wm8";
+    private static final String jwtSecretKey = TOKEN_SECRET;
+    Long jwtExpirationMs = TOKEN_EXPIRATION_TIME;
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -40,7 +44,7 @@ public class JwtService {
                 .setSubject(user.getEmail())
                 .claim("userRole",user.getUserRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 48))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -63,7 +67,7 @@ public class JwtService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

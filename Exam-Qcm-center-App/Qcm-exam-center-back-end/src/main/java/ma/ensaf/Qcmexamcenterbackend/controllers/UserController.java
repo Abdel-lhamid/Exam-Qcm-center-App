@@ -1,9 +1,11 @@
 package ma.ensaf.Qcmexamcenterbackend.controllers;
 
 import ma.ensaf.Qcmexamcenterbackend.dtos.AuthRequest;
+import ma.ensaf.Qcmexamcenterbackend.dtos.SignUpRequest;
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
+import ma.ensaf.Qcmexamcenterbackend.services.implimentation.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
 
@@ -29,9 +34,9 @@ public class UserController {
     }
     @PostMapping("/signup")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody UserDto userDto
+            @RequestBody SignUpRequest request
     ) {
-        return ResponseEntity.ok(userService.createUser(userDto));
+        return ResponseEntity.ok(authService.createUser(request));
     }
 
     @PostMapping("/sign-in")
@@ -41,7 +46,7 @@ public class UserController {
         String email = authRequest.getEmail();
         String password = authRequest.getPassword();
 
-        return ResponseEntity.ok(userService.authenticate(email, password));
+        return ResponseEntity.ok(authService.authenticate(email, password));
     }
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {

@@ -42,7 +42,6 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Column(name = "password", nullable =false)
     private String encryptedPassword;
-    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

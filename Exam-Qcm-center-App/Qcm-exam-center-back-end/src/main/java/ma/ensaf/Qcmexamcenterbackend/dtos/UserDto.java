@@ -2,7 +2,10 @@ package ma.ensaf.Qcmexamcenterbackend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
 import ma.ensaf.Qcmexamcenterbackend.response.UserResponse;
 
@@ -11,6 +14,9 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 6407689839461559517L;

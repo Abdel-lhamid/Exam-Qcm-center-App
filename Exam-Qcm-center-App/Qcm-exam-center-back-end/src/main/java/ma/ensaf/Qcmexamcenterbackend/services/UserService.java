@@ -9,13 +9,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
-public interface UserService{
-    AuthenticationResponse createUser(UserDto userDto);
+public interface UserService extends UserDetailsService {
     UserEntity getUserByEmail(String email);
     UserDto updateUser(UserDto userDto);
     void deleteUser(String userId);
     List<UserDto> getAllUsers();
     List<UserDto> getAllStudents();
 
-    AuthenticationResponse authenticate(String email, String password);
+
+    @Override
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }
