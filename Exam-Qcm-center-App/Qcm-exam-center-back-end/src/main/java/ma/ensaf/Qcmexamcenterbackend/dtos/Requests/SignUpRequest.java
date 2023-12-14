@@ -1,4 +1,4 @@
-package ma.ensaf.Qcmexamcenterbackend.dtos;
+package ma.ensaf.Qcmexamcenterbackend.dtos.Requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,5 @@ public class SignUpRequest {
     String fullName;
     String email;
     String password;
-    UserRole userRole;
-
+    String schoolId;
 }

@@ -40,11 +40,8 @@ public class UserDto implements Serializable {
 
     private UserRole userRole;
 
-    private List<ExamDto> exams;
+    private List<ExamDto> examsCreated;
     private List<ExamRecordDto> examsTaken;
-
-
-
 
 
 

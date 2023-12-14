@@ -15,4 +15,5 @@ public interface ExamService {
 
     List<ExamDto> getExamsByProfessor(String professorDto);
 
+    List<ExamDto> getExamsByGroup(String groupId);
 }

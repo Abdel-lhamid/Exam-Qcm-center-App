@@ -1,11 +1,15 @@
 package ma.ensaf.Qcmexamcenterbackend.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class ExamDto {
+    @JsonIgnore
     private Long id;
 
     private String examId;

@@ -10,9 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -20,35 +20,44 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users", schema = "qcm_exam_db")
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class UserEntity implements Serializable, UserDetails {
+    @Serial
     private static final long serialVersionUID = 6407689839461559517L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true, nullable = false)
     private String userId;
-    @Column(nullable = false)
+
+    @Column(name = "full_name")
     private String fullName;
+
     @Column(name = "email",unique = true, nullable = false)
     private String email;
 
-    @Column
+    @Column(name = "profile_image_url")
     private String profileImageUrl;
 
     @Column(name = "verification_token")
     private String verificationToken;
 
-    @Column(name = "password", nullable =false)
-    private String encryptedPassword;
+    @Column(name = "password")
+    private String password;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List <ExamEntity> exams;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExamRecordEntity> examsTaken;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "school_id", nullable = false)
+    private SchoolEntity school;
+
 
 
     @Override
@@ -56,10 +65,6 @@ public class UserEntity implements Serializable, UserDetails {
         return List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
-    @Override
-    public String getPassword() {
-        return encryptedPassword;
-    }
 
     @Override
     public String getUsername() {
@@ -83,6 +88,6 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }
