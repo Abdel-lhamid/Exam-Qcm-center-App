@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,17 +16,17 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExamRecordEntity implements Serializable {
-    private static final long serialVersionUID = 6407689839461559517L;
+public class ExamRecordEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "exam_record_id", unique = true, nullable = false)
     private String examRecordId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "student_id")
     private UserEntity student;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,12 +34,11 @@ public class ExamRecordEntity implements Serializable {
     private ExamEntity exam;
 
     @Column(nullable = false)
-    private double score;
+    private Integer score;
 
+    @Column(name = "initiated_at", updatable = false)
+    private LocalDateTime initiatedAt;
 
-    @CreationTimestamp
-    private LocalDateTime assignedAt;
-
+    @Column(name = "submitted_at")
     private LocalDateTime submittedAt;
-
 }

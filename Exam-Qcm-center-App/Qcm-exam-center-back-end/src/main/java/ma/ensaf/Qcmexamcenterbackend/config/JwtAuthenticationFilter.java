@@ -25,16 +25,11 @@ import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_SECRE
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-
     @Autowired
     private final JwtService jwtService;
 
-
     @Autowired
     private final UserDetailsService userService;
-
-
-
 
     @Autowired
     private ModelMapper modelMapper;
@@ -64,6 +59,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-
     }
 }

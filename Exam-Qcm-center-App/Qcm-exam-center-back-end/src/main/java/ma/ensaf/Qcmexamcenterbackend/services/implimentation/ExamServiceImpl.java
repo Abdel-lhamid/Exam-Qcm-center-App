@@ -1,21 +1,20 @@
 package ma.ensaf.Qcmexamcenterbackend.services.implimentation;
 
 import ma.ensaf.Qcmexamcenterbackend.dtos.ExamDto;
-import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.ExamEntity;
 import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import ma.ensaf.Qcmexamcenterbackend.repositories.ExamRepository;
+import ma.ensaf.Qcmexamcenterbackend.repositories.ModuleRepository;
 import ma.ensaf.Qcmexamcenterbackend.repositories.UserRepository;
 import ma.ensaf.Qcmexamcenterbackend.services.ExamService;
 import ma.ensaf.Qcmexamcenterbackend.shared.Utils;
-import org.hibernate.type.Type;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ModuleRepository moduleRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -87,11 +89,20 @@ public class ExamServiceImpl implements ExamService {
         UserEntity professorEntity = userRepository.findByUserId(professorDto);
         List<ExamEntity> exams = examRepository.findByProfessor(professorEntity);
 
-        List<ExamDto> examsDto = exams.stream()
+        return exams.stream()
                 .map(exam -> modelMapper.map(exam, ExamDto.class))
                 .collect(Collectors.toList());
+    }
 
-        return examsDto;
+    @Override
+    public List<ExamDto> getExamsByGroup(String groupId) {
+        return Collections.emptyList();
+        /*List<ModuleEntity> modules = moduleRepository.findByGroupId(groupId);
+        List<ExamEntity> exams = examRepository.findByModule(modules);
+
+        return exams.stream()
+                .map(exam -> modelMapper.map(exam, ExamDto.class))
+                .collect(Collectors.toList());  //return a list of examsDto*/
     }
 
 

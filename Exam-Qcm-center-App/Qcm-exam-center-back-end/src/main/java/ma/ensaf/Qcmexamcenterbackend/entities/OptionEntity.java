@@ -16,23 +16,25 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 @Table(name = "options", schema = "qcm_exam_db")
-public class OptionEntity implements Serializable {
-    private static final long serialVersionUID = 6407689839461559517L;
+public class OptionEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String optionId;
 
-    @Column(nullable = false)
+    @Column(name="text")
     private String text;
+    @Column(name = "image_url")
+    private String imageUrl;  // URL for images related to the option.
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
-    @Column(nullable = false)
+    @Column(name = "is_correct", nullable = false)
     private boolean isCorrect;
 
 }

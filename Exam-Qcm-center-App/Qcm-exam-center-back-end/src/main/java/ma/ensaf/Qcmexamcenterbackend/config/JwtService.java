@@ -16,13 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_EXPIRATION_TIME;
-import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.TOKEN_SECRET;
+import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.*;
 
 @Service
 public class JwtService {
     private static final String jwtSecretKey = TOKEN_SECRET;
     Long jwtExpirationMs = TOKEN_EXPIRATION_TIME;
+    long jwtRefreshExpirationMs = REFRESH_TOKEN_EXPIRATION_TIME;
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -32,19 +32,35 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    public String generateToken(UserEntity userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserEntity userEntityDetails){
+        return generateToken(new HashMap<>(), userEntityDetails);
     }
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserEntity user
+            UserEntity userEntity
     ){
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(user.getEmail())
-                .claim("userRole",user.getUserRole())
+                .setSubject(userEntity.getEmail())
+                .claim("userRole", userEntity.getUserRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+    public String generateRefreshToken(UserEntity userEntity){
+        return generateRefreshToken(new HashMap<>(), userEntity);
+    }
+    public String generateRefreshToken(
+            Map<String, Object> extraClaims,
+            UserEntity userEntity
+    ){
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userEntity.getEmail())
+                .claim("userRole", userEntity.getUserRole())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

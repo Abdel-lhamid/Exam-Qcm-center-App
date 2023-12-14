@@ -11,4 +11,6 @@ import java.util.List;
 public interface ExamRepository extends JpaRepository<ExamEntity, Long> {
     ExamEntity findByExamId(String examId);
     List<ExamEntity> findByProfessor(UserEntity professor);
+
+    //List<ExamEntity> findByModule(List<ModuleEntity> modules);
 }

@@ -17,16 +17,21 @@ import java.util.List;
 @AllArgsConstructor
 
 @Table(name = "questions", schema = "qcm_exam_db")
-public class QuestionEntity implements Serializable {
-    private static final long serialVersionUID = 6407689839461559517L;
+public class QuestionEntity{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String questionId;
 
     private String text; // The question text.
+
+    @Column(name = "images_url")
+    private String imagesUrl;  // URL(s) for images related to the question.
+
+    @Column(name = "point", nullable = false)
+    private Integer point;  // The point/marks assigned to the question if answered correctly.
 
     @ManyToOne
     @JoinColumn(name = "exam_id", nullable = false)
