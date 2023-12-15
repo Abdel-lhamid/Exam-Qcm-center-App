@@ -94,7 +94,7 @@ public class AuthService {
         admin.setVerificationToken(verificationToken);
         AdminEntity storedAdminEntity = adminRepository.save(admin);
         //TODO: send verification email
-        String verificationLink = url + "verifyEmail?verificationToken=" + verificationToken;
+        String verificationLink = url + "verifyAdmin?verificationToken=" + verificationToken;
 
         String emailVerificationHtmlMsg = "<!-- In Container -->\n"
                 + "<table class=\"in_container\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\" style=\"border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;\">\n"
