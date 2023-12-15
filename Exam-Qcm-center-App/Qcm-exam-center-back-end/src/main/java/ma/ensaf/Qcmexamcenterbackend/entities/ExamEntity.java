@@ -45,7 +45,7 @@ public class ExamEntity  {
 
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable = false)
-    private UserEntity professor;
+    private ProfessorEntity professor;
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuestionEntity> questions;

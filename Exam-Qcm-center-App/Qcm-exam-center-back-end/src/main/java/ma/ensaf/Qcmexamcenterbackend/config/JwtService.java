@@ -22,7 +22,10 @@ import static ma.ensaf.Qcmexamcenterbackend.config.SecurityConstants.*;
 public class JwtService {
     private static final String jwtSecretKey = TOKEN_SECRET;
     Long jwtExpirationMs = TOKEN_EXPIRATION_TIME;
-    long jwtRefreshExpirationMs = REFRESH_TOKEN_EXPIRATION_TIME;
+    Long jwtRefreshExpirationMs = REFRESH_TOKEN_EXPIRATION_TIME;
+
+    Long jwtVerificationExpirationMs = VERIFICATION_TOKEN_EXPIRATION_TIME;
+
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -52,6 +55,7 @@ public class JwtService {
     public String generateRefreshToken(UserEntity userEntity){
         return generateRefreshToken(new HashMap<>(), userEntity);
     }
+
     public String generateRefreshToken(
             Map<String, Object> extraClaims,
             UserEntity userEntity
@@ -65,8 +69,28 @@ public class JwtService {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+    public String generateVerificationToken(UserEntity userEntity){
+        return generateVerificationToken(new HashMap<>(), userEntity);
+    }
+    public String generateVerificationToken(
+            Map<String, Object> extraClaims,
+            UserEntity userEntity
+    ){
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userEntity.getEmail())
+                .claim("userRole", userEntity.getUserRole())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtVerificationExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
+        final String email = extractEmail(token);
+        return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+    public boolean isVerificationTokenValid(String token, UserDetails userDetails){
         final String email = extractEmail(token);
         return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }

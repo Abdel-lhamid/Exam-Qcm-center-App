@@ -59,10 +59,6 @@ public class AuthService {
 
     @Value("${url}")
     private String url;
-    @Value("${login.token.expiry_minutes}")
-    private int restPassword_expiring_min;
-    @Value("${verify.email.token.expiry_minutes}")
-    private int verify_email_expiring_min;
     @Value("${app.email}")
     private String appEmail;
 
@@ -90,7 +86,7 @@ public class AuthService {
         admin.setSchool(schoolSaved);
         admin.setUserId(util.generateCustomId(11));
         admin.setUserRole(UserRole.ADMIN);
-        var verificationToken = jwtService.generateToken(admin);
+        String verificationToken = jwtService.generateVerificationToken(admin);
         admin.setVerificationToken(verificationToken);
         AdminEntity storedAdminEntity = adminRepository.save(admin);
         //TODO: send verification email
@@ -210,4 +206,12 @@ public class AuthService {
         }
 
     }
+
+    /**
+     * for email verification this is how i need to do it
+     *  UserDetails user = userService.loadUserByUsername(email);
+     *             if (jwtService.isTokenValid(jwt, user)){
+     *             the is verification token valid
+     *
+     */
 }
