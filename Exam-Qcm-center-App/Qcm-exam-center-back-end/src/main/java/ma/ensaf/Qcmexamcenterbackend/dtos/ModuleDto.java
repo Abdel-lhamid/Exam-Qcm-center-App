@@ -16,8 +16,8 @@ public class ModuleDto {
     private long id;
 
     private String moduleId;
-    private String name;
 
+    private String name;
 
     private UserDto professor;
 

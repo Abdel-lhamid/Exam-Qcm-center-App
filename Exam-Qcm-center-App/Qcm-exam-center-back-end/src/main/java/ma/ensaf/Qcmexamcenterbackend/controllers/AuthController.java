@@ -1,7 +1,8 @@
 package ma.ensaf.Qcmexamcenterbackend.controllers;
 
-import ma.ensaf.Qcmexamcenterbackend.dtos.AuthRequest;
+import ma.ensaf.Qcmexamcenterbackend.dtos.Requests.AuthRequest;
 import ma.ensaf.Qcmexamcenterbackend.dtos.Requests.AdminSignUpRequest;
+import ma.ensaf.Qcmexamcenterbackend.dtos.Requests.ResetPasswordRequest;
 import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
 import ma.ensaf.Qcmexamcenterbackend.services.implimentation.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,25 @@ public class AuthController {
     ) {
         return ResponseEntity.ok(authService.adminRegistration(adminReq));
     }
+
+    @GetMapping("/verifyEmail")
+    public ResponseEntity<String> verifyAdmin(@RequestParam String verificationToken){
+
+        return ResponseEntity.ok(authService.verifyEmail(verificationToken));
+    }
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<String> forgetPassword(@RequestBody String email){
+        return ResponseEntity.ok(authService.forgetPassword(email));
+    }
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request){
+        return ResponseEntity.ok(authService.resetPassword(request.getVerificationToken(),request.getPassword()));
+    }
+
+    //TODO: send invites to professors
+
+
+    //TODO: send invites to students
 
 
 

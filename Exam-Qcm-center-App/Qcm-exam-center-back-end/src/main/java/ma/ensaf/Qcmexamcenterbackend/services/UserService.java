@@ -9,6 +9,10 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     UserEntity getUserByEmail(String email);
 
+    void activateUser(UserEntity userEntity);
+
+    UserDto updateProfile(UserDto userDto);
+
     //function to send invites to students
 
 

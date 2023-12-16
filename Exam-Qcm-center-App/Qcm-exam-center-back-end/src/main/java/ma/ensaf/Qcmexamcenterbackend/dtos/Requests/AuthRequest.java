@@ -1,4 +1,4 @@
-package ma.ensaf.Qcmexamcenterbackend.dtos;
+package ma.ensaf.Qcmexamcenterbackend.dtos.Requests;
 
 import lombok.*;
 

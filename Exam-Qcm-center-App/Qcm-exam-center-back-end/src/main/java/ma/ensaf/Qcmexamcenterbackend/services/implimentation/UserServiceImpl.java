@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email).orElse(null);
         if (userEntity == null) {
@@ -63,7 +64,30 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(userEntity.getEmail(), userEntity.getPassword(), authorities);
     }
 
+    @Override
+    public void activateUser(UserEntity userEntity) {
+        userEntity.setVerificationToken(null);
+        userEntity.setActive(true);
+        userRepository.save(userEntity);
+    }
 
+    @Override
+    public UserDto updateProfile(UserDto userDto) {
+        UserEntity userEntity = userRepository.findByEmail(userDto.getEmail()).orElse(null);
+        if (userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserEntity with email " + userDto.getEmail() + " not found");
+        }
+        userEntity.setFullName(userDto.getFullName());
+        userEntity.setEmail(userDto.getEmail());
+        userEntity.setProfileImageUrl(userDto.getProfileImageUrl());
+        if (!userDto.getPassword().isEmpty()) {
+            userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        }
+        //save
+        userRepository.save(userEntity);
+
+        return null;
+    }
 
 
 }

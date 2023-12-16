@@ -17,12 +17,8 @@ import java.util.List;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class UserDto implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 6407689839461559517L;
+public class UserDto {
 
-    @JsonIgnore
-    private Long id;
 
     private String userId;
 
@@ -40,8 +36,6 @@ public class UserDto implements Serializable {
 
     private UserRole userRole;
 
-    private List<ExamDto> examsCreated;
-    private List<ExamRecordDto> examsTaken;
 
 
 

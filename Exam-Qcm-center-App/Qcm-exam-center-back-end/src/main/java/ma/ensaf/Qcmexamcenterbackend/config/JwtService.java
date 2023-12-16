@@ -64,6 +64,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userEntity.getEmail())
                 .claim("userRole", userEntity.getUserRole())
+                .claim("schoolId", userEntity.getSchool().getSchoolId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

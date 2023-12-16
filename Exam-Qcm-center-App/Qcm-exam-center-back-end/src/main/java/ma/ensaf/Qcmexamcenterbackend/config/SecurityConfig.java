@@ -70,9 +70,9 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/auth/sign-up",
-                                "/webjars/**")
+                                "/webjars/**",
+                                "/auth/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/sign-up", "/auth/sign-in").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

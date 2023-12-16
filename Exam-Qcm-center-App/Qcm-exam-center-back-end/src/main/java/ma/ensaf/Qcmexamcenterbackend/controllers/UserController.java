@@ -1,11 +1,11 @@
 package ma.ensaf.Qcmexamcenterbackend.controllers;
 
-import ma.ensaf.Qcmexamcenterbackend.dtos.AuthRequest;
-import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
+import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
 import ma.ensaf.Qcmexamcenterbackend.services.implimentation.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +47,14 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-
+*/
     @PutMapping
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
-        UserDto updatedUser = userService.updateUser(userDto);
+    public ResponseEntity<UserDto> updateProfile(@RequestBody UserDto userDto) {
+        UserDto updatedUser = userService.updateProfile(userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+  /*  @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);

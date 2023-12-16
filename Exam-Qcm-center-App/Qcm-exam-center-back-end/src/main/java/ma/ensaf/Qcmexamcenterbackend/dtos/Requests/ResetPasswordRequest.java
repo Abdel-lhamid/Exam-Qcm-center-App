@@ -1,17 +1,15 @@
 package ma.ensaf.Qcmexamcenterbackend.dtos.Requests;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminSignUpRequest {
-
-    private String fullName;
-    private String email;
+public class ResetPasswordRequest {
+    private String verificationToken;
     private String password;
-    private String schoolName;
-    private String schoolDescription;
 }
