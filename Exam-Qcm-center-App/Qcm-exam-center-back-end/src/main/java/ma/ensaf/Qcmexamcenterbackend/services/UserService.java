@@ -13,6 +13,8 @@ public interface UserService extends UserDetailsService {
 
     UserDto updateProfile(UserDto userDto);
 
+    boolean userExists(String email);
+
     //function to send invites to students
 
 

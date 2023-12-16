@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "students")
+@SuperBuilder
 public class StudentEntity extends UserEntity{
 
     @ManyToOne

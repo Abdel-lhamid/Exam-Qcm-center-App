@@ -89,5 +89,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public boolean userExists(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email).orElse(null);
+        return userEntity != null;
+    }
+
 
 }

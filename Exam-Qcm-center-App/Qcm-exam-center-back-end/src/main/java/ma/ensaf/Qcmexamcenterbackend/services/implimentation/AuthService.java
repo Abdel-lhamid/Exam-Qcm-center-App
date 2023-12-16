@@ -264,6 +264,7 @@ public class AuthService {
         return ("password reset successfully");
     }
 
+
     /**
      * for email verification this is how i need to do it
      *  UserDetails user = userService.loadUserByUsername(email);

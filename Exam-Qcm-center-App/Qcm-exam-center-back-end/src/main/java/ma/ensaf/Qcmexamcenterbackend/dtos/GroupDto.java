@@ -11,8 +11,9 @@ import java.util.List;
 @Builder
 public class GroupDto {
 
-    private Long id;
+    private String groupId;
     private String name;
     private List<String> studentsEmail;
-    private List<ModuleDto> modules;
+    private List<String> modulesId;
+    private String schoolId;
 }

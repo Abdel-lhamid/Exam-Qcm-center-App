@@ -3,6 +3,7 @@ package ma.ensaf.Qcmexamcenterbackend.controllers;
 import ma.ensaf.Qcmexamcenterbackend.dtos.Requests.AuthRequest;
 import ma.ensaf.Qcmexamcenterbackend.dtos.Requests.AdminSignUpRequest;
 import ma.ensaf.Qcmexamcenterbackend.dtos.Requests.ResetPasswordRequest;
+import ma.ensaf.Qcmexamcenterbackend.repositories.StudentRepository;
 import ma.ensaf.Qcmexamcenterbackend.response.AuthenticationResponse;
 import ma.ensaf.Qcmexamcenterbackend.services.implimentation.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class AuthController {
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request){
         return ResponseEntity.ok(authService.resetPassword(request.getVerificationToken(),request.getPassword()));
     }
+
 
     //TODO: send invites to professors
 

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/userEntities")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -48,11 +48,13 @@ public class UserController {
     }
 
 */
-    @PutMapping
+    @PutMapping("/updateprofile")
     public ResponseEntity<UserDto> updateProfile(@RequestBody UserDto userDto) {
         UserDto updatedUser = userService.updateProfile(userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
+
+
 
   /*  @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{userId}")
