@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService {
         userEntity.setFullName(userDto.getFullName());
         userEntity.setEmail(userDto.getEmail());
         userEntity.setProfileImageUrl(userDto.getProfileImageUrl());
-        if (!userDto.getPassword().isEmpty()) {
-            userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        if (!userDto.getRawPassword().isEmpty()) {
+            userEntity.setPassword(bCryptPasswordEncoder.encode(userDto.getRawPassword()));
         }
         //save
         userRepository.save(userEntity);
