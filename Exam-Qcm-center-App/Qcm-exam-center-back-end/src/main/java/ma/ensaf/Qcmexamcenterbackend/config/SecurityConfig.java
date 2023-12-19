@@ -71,7 +71,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/auth/sign-up",
                                 "/webjars/**",
-                                "/auth/**")
+                                "/auth/**",
+                                "/students/sign-up**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

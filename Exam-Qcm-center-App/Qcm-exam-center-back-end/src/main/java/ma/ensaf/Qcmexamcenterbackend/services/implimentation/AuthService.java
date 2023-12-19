@@ -71,6 +71,12 @@ public class AuthService {
     public String adminRegistration(AdminSignUpRequest request) {
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            //if admin exists but not enabled send email verification again
+            if (userRepository.findByEmail(request.getEmail()).get().getUserRole().equals(UserRole.ADMIN)
+                    && !userRepository.findByEmail(request.getEmail()).get().isActive())
+            {
+                sendEmailVerification(userRepository.findByEmail(request.getEmail()).orElse(null),"auth/verifyEmail");
+            }
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists with this email");
         }
         if (schoolRepository.findByName(request.getSchoolName()).isPresent()) {
@@ -79,7 +85,7 @@ public class AuthService {
         SchoolEntity school = (SchoolEntity) SchoolEntity.builder()
                 .name(request.getSchoolName())
                 .description(request.getSchoolDescription())
-                .schoolId(util.generateCustomId(11))
+                .schoolId(util.generateCustomId(20))
                 .build()
                 ;
         SchoolEntity schoolSaved = schoolRepository.save(school);
@@ -90,7 +96,7 @@ public class AuthService {
         admin.setPassword(encryptedPassword);
         admin.setFullName(request.getFullName());
         admin.setSchool(schoolSaved);
-        admin.setUserId(util.generateCustomId(11));
+        admin.setUserId(util.generateCustomId(20));
         admin.setUserRole(UserRole.ADMIN);
         userRepository.save(admin);
         if (sendEmailVerification(admin,"auth/verifyEmail")){

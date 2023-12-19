@@ -28,13 +28,10 @@ public class UserDto {
 
     private String profileImageUrl;
 
-    @JsonIgnore
-    private String password;
+    private String rawPassword;
 
     @JsonIgnore
     private String verificationToken;
-
-    private UserRole userRole;
 
 
 

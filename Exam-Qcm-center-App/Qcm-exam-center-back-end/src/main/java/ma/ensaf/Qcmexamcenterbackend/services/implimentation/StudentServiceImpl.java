@@ -1,14 +1,22 @@
 package ma.ensaf.Qcmexamcenterbackend.services.implimentation;
 
+import io.jsonwebtoken.Jwts;
+import ma.ensaf.Qcmexamcenterbackend.config.JwtService;
+import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.GroupEntity;
 import ma.ensaf.Qcmexamcenterbackend.entities.StudentEntity;
-import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import ma.ensaf.Qcmexamcenterbackend.repositories.StudentRepository;
 import ma.ensaf.Qcmexamcenterbackend.services.StudentService;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
 import ma.ensaf.Qcmexamcenterbackend.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -16,6 +24,17 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
     @Autowired
     UserService userService;
+
+    @Autowired
+    AuthService authService;
+
+    @Autowired
+    JwtService jwtService;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
+
 
     @Autowired
     Utils utils;
@@ -32,24 +51,56 @@ public class StudentServiceImpl implements StudentService {
         else{
             StudentEntity student = StudentEntity.builder()
                             .email(email)
-                    .userId(utils.generateCustomId(11))
+                    .userId(utils.generateCustomId(20))
+                    .fullName("Student")
                     .group(savedGroup)
                     .isActive(false)
                     .school(savedGroup.getSchool())
                     .build();
-
-            return studentRepository.save(student);
             //TODO: send email invite to student
-
-
-
-
+            try {
+                authService.sendEmailVerification(student, "students/sign-up");
+            }catch (Exception e){
+                throw new RuntimeException(e.getMessage(),e.getCause());
+            }
+            return studentRepository.save(student);
         }
 
     }
 
+
+
     @Override
     public StudentEntity getStudentByEmail(String email) {
-        return studentRepository.findByEmail(email).orElse(null);
+        StudentEntity student = studentRepository.findByEmail(email).orElse(null);
+        if(student != null){
+            return student;
+        }
+        else {
+            throw new UsernameNotFoundException("Student not found with email: " + email);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> completeSignup(String verificationToken, UserDto profileInfo) {
+        String emailToken = jwtService.extractEmail(verificationToken);
+        StudentEntity student = studentRepository.findByEmail(emailToken).orElse(null);
+        if(student != null){
+            if(!Objects.equals(student.getVerificationToken(), verificationToken) || !jwtService.isVerificationTokenValid(verificationToken, student)){
+                authService.sendEmailVerification(student, "students/sign-up");
+                throw new RuntimeException("Invalid token");
+            }
+            student.setFullName(profileInfo.getFullName());
+            userService.activateUser(student);
+            student.setPassword(passwordEncoder.encode(profileInfo.getRawPassword()));
+            student.setProfileImageUrl(profileInfo.getProfileImageUrl());
+            studentRepository.save(student);
+            return ResponseEntity.ok("Signup completed successfully");
+        }
+        else {
+            return new ResponseEntity<>("ask you school manager to send you an invite", HttpStatus.CONFLICT);
+        }
+
+
     }
 }

@@ -1,5 +1,6 @@
 package ma.ensaf.Qcmexamcenterbackend.controllers;
 
+import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.StudentEntity;
 import ma.ensaf.Qcmexamcenterbackend.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,12 @@ public class StudentController {
     public ResponseEntity<String> getStudentByEmail(@PathVariable String email){
         StudentEntity student = studentService.getStudentByEmail(email);
         return (student != null) ? ResponseEntity.ok(student.getFullName()) : ResponseEntity.notFound().build();
+    }
+
+    //complete signup
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<String> completeSignup(@RequestParam String verificationToken, @RequestBody UserDto profileInfo){
+        return studentService.completeSignup(verificationToken, profileInfo);
     }
 }
