@@ -2,6 +2,7 @@ package ma.ensaf.Qcmexamcenterbackend.services.implimentation;
 
 import ma.ensaf.Qcmexamcenterbackend.entities.GroupEntity;
 import ma.ensaf.Qcmexamcenterbackend.entities.StudentEntity;
+import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import ma.ensaf.Qcmexamcenterbackend.repositories.StudentRepository;
 import ma.ensaf.Qcmexamcenterbackend.services.StudentService;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
@@ -20,6 +21,8 @@ public class StudentServiceImpl implements StudentService {
     Utils utils;
     @Override
     public StudentEntity addStudentToGroup(String email, GroupEntity savedGroup) {
+
+
         StudentEntity studentExists = studentRepository.findByEmail(email).orElse(null);
 
         if(studentExists != null){
@@ -43,5 +46,10 @@ public class StudentServiceImpl implements StudentService {
 
         }
 
+    }
+
+    @Override
+    public StudentEntity getStudentByEmail(String email) {
+        return studentRepository.findByEmail(email).orElse(null);
     }
 }

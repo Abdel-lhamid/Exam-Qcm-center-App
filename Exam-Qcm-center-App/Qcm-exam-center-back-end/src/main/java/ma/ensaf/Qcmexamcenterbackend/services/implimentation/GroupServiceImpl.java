@@ -11,6 +11,9 @@ import ma.ensaf.Qcmexamcenterbackend.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class GroupServiceImpl implements GroupService {
     @Autowired
@@ -34,12 +37,14 @@ public class GroupServiceImpl implements GroupService {
                 .build();
         GroupEntity savedGroup = groupRepository.save(groupEntity);
 
-        // check if students exists if not send email invites
+        List<StudentEntity> students = new ArrayList<>();
+        // check if students exists, if not send email invites
         for (String email : group.getStudentsEmail()) {
             //check if user exists in students if so add to students list
             StudentEntity student = studentService.addStudentToGroup(email,savedGroup);
-            savedGroup.getStudents().add(student);
+            students.add(student);
         }
+        savedGroup.setStudents(students);
 
         savedGroup = groupRepository.save(groupEntity);
 

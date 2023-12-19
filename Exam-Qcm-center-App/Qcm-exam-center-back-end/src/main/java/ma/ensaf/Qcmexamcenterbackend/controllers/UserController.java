@@ -54,6 +54,13 @@ public class UserController {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
+    //get a student by email
+    @GetMapping("/student/{email}")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+        UserDto user = modelMapper.map(userService.getUserByEmail(email), UserDto.class);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 
 
   /*  @PreAuthorize("hasRole('ROLE_ADMIN')")

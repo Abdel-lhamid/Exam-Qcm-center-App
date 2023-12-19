@@ -18,11 +18,12 @@ public class GroupController {
 
     // create Crud api for Group Entity
         // create group api
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/example")
-    public void exampleMethod(Authentication authentication) {
+    public String exampleMethod(Authentication authentication) {
         // Log or inspect the authentication object
         System.out.println(authentication);
-
+        return ("admin authorization working");
         // Your method logic...
     }
     @PreAuthorize("hasAuthority('ADMIN')")

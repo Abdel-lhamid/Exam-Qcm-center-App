@@ -1,9 +1,7 @@
 package ma.ensaf.Qcmexamcenterbackend.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ma.ensaf.Qcmexamcenterbackend.enums.UserRole;
 
@@ -14,6 +12,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "students")
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentEntity extends UserEntity{
 
     @ManyToOne
