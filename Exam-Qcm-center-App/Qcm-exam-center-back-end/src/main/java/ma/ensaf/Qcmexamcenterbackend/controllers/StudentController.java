@@ -1,5 +1,6 @@
 package ma.ensaf.Qcmexamcenterbackend.controllers;
 
+import ma.ensaf.Qcmexamcenterbackend.dtos.StudentGroupDto;
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.StudentEntity;
 import ma.ensaf.Qcmexamcenterbackend.services.StudentService;
@@ -25,8 +26,28 @@ public class StudentController {
 
     //complete signup
 
-    @PostMapping("/sign-up")
+    @PostMapping("/complete-sign-up")
     public ResponseEntity<String> completeSignup(@RequestParam String verificationToken, @RequestBody UserDto profileInfo){
         return studentService.completeSignup(verificationToken, profileInfo);
     }
+
+    //DONE: Create student add to group already created and send email invite
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/add-student")
+    public ResponseEntity<String> addStudentGroup(@RequestBody StudentGroupDto studentGroup){
+        return studentService.addStudentGroup(studentGroup);
+    }
+    // Create student or add list of student to groups
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/add-students")
+    @ResponseBody()
+    public ResponseEntity<String> addStudentGroups(@RequestBody StudentGroupDto[] studentGroups){
+        for (StudentGroupDto studentGroup : studentGroups) {
+            studentService.addStudentGroup(studentGroup);
+        };
+        return ResponseEntity.ok("Students added successfully");
+    }
+
+
+
 }

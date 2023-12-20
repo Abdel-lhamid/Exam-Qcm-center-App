@@ -30,10 +30,5 @@ public class UserDto {
 
     private String rawPassword;
 
-    @JsonIgnore
-    private String verificationToken;
-
-
-
 
 }

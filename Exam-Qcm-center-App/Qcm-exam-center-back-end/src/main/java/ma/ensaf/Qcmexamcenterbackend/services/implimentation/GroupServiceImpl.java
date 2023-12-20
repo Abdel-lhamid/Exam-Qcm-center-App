@@ -50,5 +50,15 @@ public class GroupServiceImpl implements GroupService {
 
     }
 
+    @Override
+    public GroupEntity findByGroupId(String groupId) {
+        GroupEntity group = groupRepository.findByGroupId(groupId).orElse(null);
+        if(group == null)
+        {
+            throw new RuntimeException("Group not found");
+        }
+        return group;
+    }
+
 
 }

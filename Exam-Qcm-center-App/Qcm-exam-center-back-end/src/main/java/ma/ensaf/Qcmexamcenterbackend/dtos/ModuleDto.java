@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 @Builder
-
 public class ModuleDto {
 
     @JsonIgnore
@@ -19,9 +18,11 @@ public class ModuleDto {
 
     private String name;
 
-    private UserDto professor;
+    private String professorEmail;
 
-    private List<GroupDto> groups;
+    private List<String> groupsId;
+
+    private String schoolId;
 
     private List<ExamDto> exams;
 }

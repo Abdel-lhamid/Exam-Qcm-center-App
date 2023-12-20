@@ -24,11 +24,7 @@ public class GroupController {
     public ResponseEntity<String> createGroup(@RequestBody GroupDto group){
         groupService.createGroup(group);
         return ResponseEntity.ok("group created");
-
-
     }
-
-
 
 
 

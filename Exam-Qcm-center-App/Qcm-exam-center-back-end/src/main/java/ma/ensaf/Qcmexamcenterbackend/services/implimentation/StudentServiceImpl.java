@@ -2,9 +2,11 @@ package ma.ensaf.Qcmexamcenterbackend.services.implimentation;
 
 import io.jsonwebtoken.Jwts;
 import ma.ensaf.Qcmexamcenterbackend.config.JwtService;
+import ma.ensaf.Qcmexamcenterbackend.dtos.StudentGroupDto;
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
 import ma.ensaf.Qcmexamcenterbackend.entities.GroupEntity;
 import ma.ensaf.Qcmexamcenterbackend.entities.StudentEntity;
+import ma.ensaf.Qcmexamcenterbackend.repositories.GroupRepository;
 import ma.ensaf.Qcmexamcenterbackend.repositories.StudentRepository;
 import ma.ensaf.Qcmexamcenterbackend.services.StudentService;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
@@ -34,6 +36,8 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    GroupRepository groupRepository;
 
 
     @Autowired
@@ -59,7 +63,7 @@ public class StudentServiceImpl implements StudentService {
                     .build();
             //TODO: send email invite to student
             try {
-                authService.sendEmailVerification(student, "students/sign-up");
+                authService.sendEmailVerification(student, "students/complete-sign-up");
             }catch (Exception e){
                 throw new RuntimeException(e.getMessage(),e.getCause());
             }
@@ -102,5 +106,14 @@ public class StudentServiceImpl implements StudentService {
         }
 
 
+    }
+
+    @Override
+    public ResponseEntity<String> addStudentGroup(StudentGroupDto studentGroup) {
+        GroupEntity group = groupRepository.findByGroupId(studentGroup.getGroupId()).orElse(null);
+        if(group != null){
+            StudentEntity student = addStudentToGroup(studentGroup.getEmail(), group);
+        }
+        return ResponseEntity.ok("Student added successfully");
     }
 }

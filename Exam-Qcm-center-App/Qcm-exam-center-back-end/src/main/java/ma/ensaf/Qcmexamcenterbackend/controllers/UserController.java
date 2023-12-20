@@ -1,12 +1,14 @@
 package ma.ensaf.Qcmexamcenterbackend.controllers;
 
 import ma.ensaf.Qcmexamcenterbackend.dtos.UserDto;
+import ma.ensaf.Qcmexamcenterbackend.entities.UserEntity;
 import ma.ensaf.Qcmexamcenterbackend.services.UserService;
 import ma.ensaf.Qcmexamcenterbackend.services.implimentation.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -61,6 +63,13 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/activate")
+    public ResponseEntity<String> activateUser(@RequestParam String email) {
+        UserEntity user = userService.getUserByEmail(email);
+        userService.activateUser(user);
+        return ResponseEntity.ok("User activated successfully");
+    }
 
 
   /*  @PreAuthorize("hasRole('ROLE_ADMIN')")
